@@ -7,13 +7,13 @@ config :amnesia_api, AmnesiaApiWeb.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :debug
 
 # Configure your database
 config :amnesia_api, AmnesiaApi.Repo,
   adapter: Ecto.Adapters.MySQL,
   username: "root",
-  password: "",
+  password: "letmein",
   database: "amnesia_api_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

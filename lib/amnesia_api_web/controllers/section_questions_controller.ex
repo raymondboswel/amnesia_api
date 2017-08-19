@@ -4,6 +4,8 @@ defmodule AmnesiaApiWeb.SectionQuestionsController do
   alias AmnesiaApi.Amnesia
   alias AmnesiaApi.Amnesia.SectionQuestions
 
+  require Logger
+
   action_fallback AmnesiaApiWeb.FallbackController
 
   def index(conn, _params) do
@@ -12,7 +14,9 @@ defmodule AmnesiaApiWeb.SectionQuestionsController do
   end
 
   def create(conn, %{"section_questions" => section_questions_params}) do
+    Logger.debug "Section questions params: #{inspect section_questions_params}"
     with {:ok, %SectionQuestions{} = section_questions} <- Amnesia.create_section_questions(section_questions_params) do
+      Logger.debug "Section questions: #{inspect section_questions}"
       conn
       |> put_status(:created)
       |> put_resp_header("location", section_questions_path(conn, :show, section_questions))

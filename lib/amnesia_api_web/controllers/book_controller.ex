@@ -3,8 +3,14 @@ defmodule AmnesiaApiWeb.BookController do
 
   alias AmnesiaApi.Amnesia
   alias AmnesiaApi.Amnesia.Book
+  import Ecto.Query
 
   action_fallback AmnesiaApiWeb.FallbackController
+
+  def index(conn, %{"search" => search}) do
+    books = AmnesiaApi.Repo.all(from b in AmnesiaApi.Amnesia.Book, where: like(b.title, ^"%#{search}%"))
+    render(conn, "index.json", books: books)
+  end
 
   def index(conn, _params) do
     books = Amnesia.list_books()

@@ -6,11 +6,21 @@ defmodule AmnesiaApiWeb.SectionQuestionsControllerTest do
 
   @create_attrs %{}
   @update_attrs %{}
-  @invalid_attrs %{}
+  @invalid_attrs %{invalid_key: "invalid_value"}
 
   def fixture(:section_questions) do
     {:ok, section_questions} = Amnesia.create_section_questions(@create_attrs)
     section_questions
+  end
+
+  def fixture(:section) do
+    {:ok, section} = Amnesia.create_section(%{name: "test section"})
+    section
+  end
+
+  def fixture(:question) do
+    {:ok, question} = Amnesia.create_section(%{question: "test question", rating: 0})
+    question
   end
 
   setup %{conn: conn} do
@@ -71,7 +81,9 @@ defmodule AmnesiaApiWeb.SectionQuestionsControllerTest do
   end
 
   defp create_section_questions(_) do
-    section_questions = fixture(:section_questions)
+    section = fixture(:section)
+    question = fixture(:question)
+    section_questions = fixture(:section_questions, section, question)
     {:ok, section_questions: section_questions}
   end
 end
