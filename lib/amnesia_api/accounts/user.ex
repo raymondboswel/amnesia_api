@@ -1,5 +1,6 @@
 defmodule AmnesiaApi.Accounts.User do
   use Ecto.Schema
+  require Logger 
   import Ecto.Changeset
   alias AmnesiaApi.Accounts.User
 
@@ -16,8 +17,10 @@ defmodule AmnesiaApi.Accounts.User do
 
   @doc false
   def changeset(%User{} = user, attrs) do
+    Logger.debug "User: #{inspect user}"
     user
     |> cast(attrs, [:name, :surname, :email, :password_hash, :salt])
-    |> validate_required([:name, :surname, :email, :password_hash, :salt])
+    |> unique_constraint(:email)
+    |> validate_required([:name, :surname, :email, :password_hash])
   end
 end

@@ -23,6 +23,7 @@ defmodule AmnesiaApiWeb.Router do
   scope "/api", AmnesiaApiWeb do
     pipe_through :api
     resources "/users", UserController
+    post "/users/login", UserController, :login
     resources "/books", BookController
     resources "/authors", AuthorController
     resources "/questions", QuestionController

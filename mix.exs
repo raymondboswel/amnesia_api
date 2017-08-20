@@ -42,7 +42,9 @@ defmodule AmnesiaApi.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:cors_plug, "~> 1.2"},
-      {:guardian, "~> 0.14"}
+      {:guardian, "~> 0.14"},
+      {:comeonin, "~> 4.0"},
+      {:pbkdf2_elixir, "~> 0.12"}
     ]
   end
 
