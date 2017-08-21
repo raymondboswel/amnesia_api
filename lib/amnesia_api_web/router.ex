@@ -25,6 +25,7 @@ defmodule AmnesiaApiWeb.Router do
     resources "/users", UserController
     post "/users/login", UserController, :login
     resources "/books", BookController
+    resources "/user_books", UserBookController
     resources "/authors", AuthorController
     resources "/questions", QuestionController
     resources "/answers", AnswerController
