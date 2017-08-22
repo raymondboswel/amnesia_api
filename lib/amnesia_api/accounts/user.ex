@@ -11,6 +11,7 @@ defmodule AmnesiaApi.Accounts.User do
     field :password_hash, :string
     field :salt, :string
     field :surname, :string
+    many_to_many :books, AmnesiaApi.Amnesia.Book, join_through: "user_books"
 
     timestamps()
   end

@@ -7,6 +7,7 @@ defmodule AmnesiaApi.Amnesia.Book do
   schema "books" do
     field :subtitle, :string
     field :title, :string
+    many_to_many :user, AmnesiaApi.Accounts.User, join_through: "user_books"
 
     timestamps()
   end
