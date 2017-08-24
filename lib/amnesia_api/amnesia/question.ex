@@ -5,16 +5,16 @@ defmodule AmnesiaApi.Amnesia.Question do
 
 
   schema "questions" do
-    field :question, :string
+    field :text, :string
     field :rating, :float
-
+    field :book_id, :id
     timestamps()
   end
 
   @doc false
   def changeset(%Question{} = question, attrs) do
     question
-    |> cast(attrs, [:question, :rating])
-    |> validate_required([:question, :rating])
+    |> cast(attrs, [:text, :rating])
+    |> validate_required([:text])
   end
 end

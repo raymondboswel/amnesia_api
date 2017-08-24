@@ -1,6 +1,7 @@
 defmodule AmnesiaApiWeb.QuestionController do
   use AmnesiaApiWeb, :controller
-
+  import Ecto.Query
+  require Logger
   alias AmnesiaApi.Amnesia
   alias AmnesiaApi.Amnesia.Question
 
@@ -11,8 +12,15 @@ defmodule AmnesiaApiWeb.QuestionController do
     render(conn, "index.json", questions: questions)
   end
 
+  def index(conn, %{"book_id" => book_id}) do
+    questions = AmnesiaApi.Repo.all(from q in AmnesiaApi.Amnesia.Question, where: q.book_id == ^book_id)
+    render(conn, "index.json", questions: questions)
+  end
+
   def create(conn, %{"question" => question_params}) do
-    with {:ok, %Question{} = question} <- Amnesia.create_question(question_params) do
+    result = Amnesia.create_question(question_params)
+    Logger.debug "Result #{inspect result}"
+    with {:ok, %Question{} = question} <- result do
       conn
       |> put_status(:created)
       |> put_resp_header("location", question_path(conn, :show, question))

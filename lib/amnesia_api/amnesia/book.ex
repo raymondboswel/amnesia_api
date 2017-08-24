@@ -7,6 +7,7 @@ defmodule AmnesiaApi.Amnesia.Book do
   schema "books" do
     field :subtitle, :string
     field :title, :string
+    field :summary, :string
     many_to_many :user, AmnesiaApi.Accounts.User, join_through: "user_books"
 
     timestamps()
@@ -15,7 +16,7 @@ defmodule AmnesiaApi.Amnesia.Book do
   @doc false
   def changeset(%Book{} = book, attrs) do
     book
-    |> cast(attrs, [:title, :subtitle])
+    |> cast(attrs, [:title, :subtitle, :summary])
     |> validate_required([:title, :subtitle])
   end
 end

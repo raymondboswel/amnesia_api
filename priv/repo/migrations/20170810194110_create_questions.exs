@@ -3,9 +3,9 @@ defmodule AmnesiaApi.Repo.Migrations.CreateQuestions do
 
   def change do
     create table(:questions) do
-      add :question, :string
+      add :text, :string
       add :rating, :float
-
+      add :book_id, references(:books, on_delete: :nothing)
       timestamps()
     end
 

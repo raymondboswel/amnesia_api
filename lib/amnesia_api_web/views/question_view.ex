@@ -12,7 +12,7 @@ defmodule AmnesiaApiWeb.QuestionView do
 
   def render("question.json", %{question: question}) do
     %{id: question.id,
-      question: question.question,
+      text: question.text,
       rating: question.rating}
   end
 end

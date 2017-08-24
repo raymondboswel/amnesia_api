@@ -5,7 +5,7 @@ defmodule AmnesiaApi.Repo.Migrations.CreateBooks do
     create table(:books) do
       add :title, :string
       add :subtitle, :string
-
+      add :summary, :string
       timestamps()
     end
 
