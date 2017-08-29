@@ -7,20 +7,24 @@ defmodule AmnesiaApiWeb.QuestionController do
 
   action_fallback AmnesiaApiWeb.FallbackController
 
+  def index(conn, %{"book_id" => book_id}) do
+    questions = AmnesiaApi.Repo.all(from q in AmnesiaApi.Amnesia.Question, where: q.book_id == ^book_id)
+                |> AmnesiaApi.Repo.preload(:answers)
+    Logger.debug "Questions: #{inspect questions}"
+    render(conn, "index.json", questions: questions)
+  end
+
   def index(conn, _params) do
     questions = Amnesia.list_questions()
     render(conn, "index.json", questions: questions)
   end
 
-  def index(conn, %{"book_id" => book_id}) do
-    questions = AmnesiaApi.Repo.all(from q in AmnesiaApi.Amnesia.Question, where: q.book_id == ^book_id)
-    render(conn, "index.json", questions: questions)
-  end
 
   def create(conn, %{"question" => question_params}) do
-    result = Amnesia.create_question(question_params)
+    {:ok, result} = Amnesia.create_question(question_params) 
+    result = result |> AmnesiaApi.Repo.preload(:answers)
     Logger.debug "Result #{inspect result}"
-    with {:ok, %Question{} = question} <- result do
+    with %Question{} = question <- result do
       conn
       |> put_status(:created)
       |> put_resp_header("location", question_path(conn, :show, question))

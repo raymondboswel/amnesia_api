@@ -7,7 +7,7 @@ defmodule AmnesiaApi.Amnesia.Answer do
   schema "answers" do
     field :answer, :string
     field :rating, :float
-    field :question_id, :id
+    belongs_to :question, Question
 
     timestamps()
   end
