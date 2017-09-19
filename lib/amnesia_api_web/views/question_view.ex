@@ -13,7 +13,7 @@ defmodule AmnesiaApiWeb.QuestionView do
   def render("question.json", %{question: question}) do
     %{id: question.id,
       text: question.text,
-      answers: AmnesiaApiWeb.AnswerView.render("index.json", %{answers: question.answers}),
+      answers: Enum.map(question.answers, fn(answer) -> AmnesiaApiWeb.AnswerView.render("answer.json", %{answer: answer}) end),
       rating: question.rating}
   end
 end

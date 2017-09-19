@@ -30,6 +30,7 @@ defmodule AmnesiaApiWeb.Router do
     resources "/authors", AuthorController
     resources "/questions", QuestionController
     resources "/answers", AnswerController
+    post "/questions/:question_id/answers", AnswerController, :create
     resources "/chapters", ChapterController
     resources "/chapter_questions", ChapterQuestionController
     resources "/book_sections", BookSectionController

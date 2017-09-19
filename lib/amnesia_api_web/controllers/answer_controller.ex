@@ -11,7 +11,8 @@ defmodule AmnesiaApiWeb.AnswerController do
     render(conn, "index.json", answers: answers)
   end
 
-  def create(conn, %{"answer" => answer_params}) do
+  def create(conn, %{"question_id" => question_id, "answer" => answer_params}) do
+    answer_params = Map.put(answer_params, "question_id", question_id)
     with {:ok, %Answer{} = answer} <- Amnesia.create_answer(answer_params) do
       conn
       |> put_status(:created)

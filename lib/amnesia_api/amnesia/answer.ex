@@ -15,7 +15,7 @@ defmodule AmnesiaApi.Amnesia.Answer do
   @doc false
   def changeset(%Answer{} = answer, attrs) do
     answer
-    |> cast(attrs, [:answer, :rating])
-    |> validate_required([:answer, :rating])
+    |> cast(attrs, [:answer, :rating, :question_id])
+    |> validate_required([:answer])
   end
 end
