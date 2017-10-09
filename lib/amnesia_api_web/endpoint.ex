@@ -38,7 +38,7 @@ defmodule AmnesiaApiWeb.Endpoint do
     key: "_amnesia_api_key",
     signing_salt: "p9929py5"
 
-  plug CORSPlug
+  plug CORSPlug, origin: ["http://localhost:8080"]
   plug AmnesiaApiWeb.Router
 
   @doc """
