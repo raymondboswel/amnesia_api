@@ -3,6 +3,7 @@ defmodule AmnesiaApiWeb.AuthorController do
 
   alias AmnesiaApi.Amnesia
   alias AmnesiaApi.Amnesia.Author
+  import Ecto.Query
 
   action_fallback AmnesiaApiWeb.FallbackController
 
