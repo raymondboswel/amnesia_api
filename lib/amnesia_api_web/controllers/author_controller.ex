@@ -6,6 +6,11 @@ defmodule AmnesiaApiWeb.AuthorController do
 
   action_fallback AmnesiaApiWeb.FallbackController
 
+  def index(conn, %{"search" => search}) do
+    authors = AmnesiaApi.Repo.all(from a in AmnesiaApi.Amnesia.Author, where: like(a.name, ^"%#{search}%") or like(a.surname, ^"#{search}%"))
+    render(conn, "index.json", authors: authors)
+  end
+
   def index(conn, _params) do
     authors = Amnesia.list_authors()
     render(conn, "index.json", authors: authors)
