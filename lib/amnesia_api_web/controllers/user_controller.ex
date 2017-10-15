@@ -44,7 +44,7 @@ defmodule AmnesiaApiWeb.UserController do
       new_conn
       |> put_resp_header("authorization", "Bearer #{jwt}")
       |> put_resp_header("x-expires", Integer.to_string(exp))
-      |> render "sign_in.json", user: user, jwt: jwt, exp: exp
+      |> render("sign_in.json", user: user, jwt: jwt, exp: exp)
     else
       conn
           |> send_resp(401, "Could not authenticate with email/password")
