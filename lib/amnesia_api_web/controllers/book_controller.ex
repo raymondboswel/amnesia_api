@@ -6,17 +6,20 @@ defmodule AmnesiaApiWeb.BookController do
   alias AmnesiaApi.Amnesia.BookAuthors
   alias AmnesiaApi.Amnesia.Author
   import Ecto.Query
+  alias AmnesiaApi.Repo
   require Logger
 
   action_fallback AmnesiaApiWeb.FallbackController
 
   def index(conn, %{"search" => search}) do
-    books = AmnesiaApi.Repo.all(from b in AmnesiaApi.Amnesia.Book, where: like(b.title, ^"%#{search}%"))
+    books = AmnesiaApi.Repo.all(from b in AmnesiaApi.Amnesia.Book, where: like(b.title, ^"%#{search}%")) |> Repo.preload(:authors) 
+    Logger.debug "Books: #{inspect books}"
     render(conn, "index.json", books: books)
   end
 
   def index(conn, _params) do
-    books = Amnesia.list_books()
+    books = AmnesiaApi.Repo.all(from b in AmnesiaApi.Amnesia.Book) |> Repo.preload(:authors)
+    Logger.debug "Books: #{inspect books}"
     render(conn, "index.json", books: books)
   end
 
@@ -26,14 +29,20 @@ defmodule AmnesiaApiWeb.BookController do
     existing_authors = Enum.filter(authors, fn(author) -> Map.has_key?(author, "id") end)
     Enum.each(new_authors, fn(a) -> 
         case AmnesiaApi.Repo.insert(AmnesiaApi.Amnesia.Author.changeset(%Author{}, a)) do
-          {:ok, author } -> [author | existing_authors]
+          {:ok, author } -> 
+            Logger.info "author: #{inspect author}"
+            existing_authors = [author | existing_authors]
+            Logger.debug "existing_authors: #{inspect existing_authors}"
           {:error, changeset} -> Logger.error "Could not add author: #{inspect changeset}"        
         end
       end)
+    Logger.debug "existing_authors: #{inspect existing_authors}"
     case Amnesia.create_book(%{title: title, subtitle: subtitle}) do
-      {:ok, book} -> 
+      {:ok, book} ->         
         Logger.warn "Book: #{inspect book}"
-        Enum.each(existing_authors, fn(author) -> AmnesiaApi.Repo.insert(%BookAuthors{book_id: book.id, author_id: author.id}) end)
+        Logger.debug "Existing authors: #{inspect existing_authors}"
+        res = Enum.each(existing_authors, fn(author) -> AmnesiaApi.Repo.insert(%BookAuthors{book_id: book.id, author_id: author.id}) end)
+        Logger.info "Add book author result: #{inspect res}"
         conn 
           |> put_status(:created)
           |> put_resp_header("location", book_path(conn, :show, book))

@@ -13,6 +13,7 @@ defmodule AmnesiaApiWeb.BookView do
   def render("book.json", %{book: book}) do
     %{id: book.id,
       title: book.title,
-      subtitle: book.subtitle}
+      subtitle: book.subtitle,
+      summary: book.summary}
   end
 end
