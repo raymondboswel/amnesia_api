@@ -14,7 +14,7 @@ defmodule AmnesiaApi.Amnesia.SectionQuestions do
   @doc false
   def changeset(%SectionQuestions{} = section_questions, attrs) do
     section_questions
-    |> cast(attrs, [])
+    |> cast(attrs, [:section_id, :question_id])
     |> validate_required([:section_id, :question_id])
   end
 end
