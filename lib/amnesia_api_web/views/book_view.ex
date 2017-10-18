@@ -14,6 +14,8 @@ defmodule AmnesiaApiWeb.BookView do
     %{id: book.id,
       title: book.title,
       subtitle: book.subtitle,
-      summary: book.summary}
+      summary: book.summary,
+      sections: AmnesiaApiWeb.SectionView.render("index.json", %{sections: book.sections})
+    }
   end
 end

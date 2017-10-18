@@ -10,8 +10,14 @@ defmodule AmnesiaApiWeb.UserBookController do
   action_fallback AmnesiaApiWeb.FallbackController
 
   def index(conn, %{"user_id" => user_id}) do
-    user_books = Repo.get(User, user_id) |> Repo.preload(:books) |> Map.fetch!(:books)
-    render(conn, "user_books.json", all_user_books: user_books)
+    user_books = Repo.get(User, user_id) 
+    |> Repo.preload(:books)     
+    |> Map.fetch!(:books)
+    books = Enum.map(user_books, fn(book) -> 
+      book 
+      |> Repo.preload(:sections)
+      |> Repo.preload(:authors) end)
+    render(conn, "user_books.json", all_user_books: books)
   end
 
   def index(conn, _params) do

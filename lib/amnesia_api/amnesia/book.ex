@@ -10,6 +10,7 @@ defmodule AmnesiaApi.Amnesia.Book do
     field :summary, :string
     many_to_many :user, AmnesiaApi.Accounts.User, join_through: "user_books"
     many_to_many :authors, AmnesiaApi.Amnesia.Author, join_through: "book_authors"
+    many_to_many :sections, AmnesiaApi.Amnesia.Section, join_through: "book_sections"
 
     timestamps()
   end

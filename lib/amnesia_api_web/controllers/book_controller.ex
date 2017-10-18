@@ -12,13 +12,17 @@ defmodule AmnesiaApiWeb.BookController do
   action_fallback AmnesiaApiWeb.FallbackController
 
   def index(conn, %{"search" => search}) do
-    books = AmnesiaApi.Repo.all(from b in AmnesiaApi.Amnesia.Book, where: like(b.title, ^"%#{search}%")) |> Repo.preload(:authors) 
+    books = AmnesiaApi.Repo.all(from b in AmnesiaApi.Amnesia.Book, where: like(b.title, ^"%#{search}%")) 
+    |> Repo.preload(:authors) 
+    |> Repo.preload(:sections)
     Logger.debug "Books: #{inspect books}"
     render(conn, "index.json", books: books)
   end
 
   def index(conn, _params) do
-    books = AmnesiaApi.Repo.all(from b in AmnesiaApi.Amnesia.Book) |> Repo.preload(:authors)
+    books = AmnesiaApi.Repo.all(from b in AmnesiaApi.Amnesia.Book) 
+    |> Repo.preload(:authors)
+    |> Repo.preload(:sections)
     Logger.debug "Books: #{inspect books}"
     render(conn, "index.json", books: books)
   end
