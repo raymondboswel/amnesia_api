@@ -9,6 +9,7 @@ defmodule AmnesiaApi.Amnesia.Question do
     field :rating, :float
     field :book_id, :id
     has_many :answers, AmnesiaApi.Amnesia.Answer
+    many_to_many :sections, AmnesiaApi.Amnesia.Section, join_through: "section_questions"
     timestamps()
   end
 

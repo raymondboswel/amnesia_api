@@ -10,6 +10,7 @@ defmodule AmnesiaApiWeb.QuestionController do
   def index(conn, %{"book_id" => book_id}) do
     questions = AmnesiaApi.Repo.all(from q in AmnesiaApi.Amnesia.Question, where: q.book_id == ^book_id)
                 |> AmnesiaApi.Repo.preload(:answers)
+                |> AmnesiaApi.Repo.preload(:sections)
     Logger.debug "Questions: #{inspect questions}"
     render(conn, "index.json", questions: questions)
   end
@@ -21,10 +22,11 @@ defmodule AmnesiaApiWeb.QuestionController do
 
 
   def create(conn, %{"question" => question_params}) do
-    {:ok, result} = Amnesia.create_question(question_params) 
-    result = result |> AmnesiaApi.Repo.preload(:answers)
+    {:ok, question} = Amnesia.create_question(question_params) 
+    {:ok, result} = Amnesia.create_section_questions(%{question_id: question.id, section_id: question_params["section_id"]})
+    question = question |> AmnesiaApi.Repo.preload(:answers)
     Logger.debug "Result #{inspect result}"
-    with %Question{} = question <- result do
+    with %Question{} = question <- question do
       conn
       |> put_status(:created)
       |> put_resp_header("location", question_path(conn, :show, question))

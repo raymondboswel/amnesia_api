@@ -11,9 +11,15 @@ defmodule AmnesiaApiWeb.QuestionView do
   end
 
   def render("question.json", %{question: question}) do
+    section = List.first(question.sections)
+    if section ==  nil do
+      section = %AmnesiaApi.Amnesia.Section{name: "Uncategorized", id: 0}
+    end
     %{id: question.id,
       text: question.text,
       answers: Enum.map(question.answers, fn(answer) -> AmnesiaApiWeb.AnswerView.render("answer.json", %{answer: answer}) end),
-      rating: question.rating}
+      rating: question.rating,
+      section: %{name: section.name, id: section.id}
+    }
   end
 end
