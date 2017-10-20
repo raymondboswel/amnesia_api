@@ -23,18 +23,19 @@ defmodule AmnesiaApiWeb.Router do
   scope "/api", AmnesiaApiWeb do
     pipe_through :api
     resources "/users", UserController
-    post "/users/login", UserController, :login
+    post      "/users/login", UserController, :login
     resources "/books", BookController
     resources "/user_books", UserBookController
-    delete "/user_books", UserBookController, :delete
+    delete    "/user_books", UserBookController, :delete
     resources "/authors", AuthorController
     resources "/questions", QuestionController
     resources "/answers", AnswerController
-    post "/questions/:question_id/answers", AnswerController, :create
+    post      "/questions/:question_id/answers", AnswerController, :create
     resources "/chapters", ChapterController
     resources "/chapter_questions", ChapterQuestionController
     resources "/book_sections", BookSectionController
     resources "/sections", SectionController
+    post      "/books/:book_id/sections", SectionController, :create
     resources "/section_questions", SectionQuestionsController
     resources "/book_authors", BookAuthorsController
   end

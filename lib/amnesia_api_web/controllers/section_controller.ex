@@ -3,12 +3,27 @@ defmodule AmnesiaApiWeb.SectionController do
 
   alias AmnesiaApi.Amnesia
   alias AmnesiaApi.Amnesia.Section
+  alias AmnesiaApi.Amnesia.Book
+  alias AmnesiaApi.Amnesia.BookSection
 
   action_fallback AmnesiaApiWeb.FallbackController
 
   def index(conn, _params) do
     sections = Amnesia.list_sections()
     render(conn, "index.json", sections: sections)
+  end
+
+  def create(conn, %{"book_id" => book_id, "section" => section_params}) do
+    book = AmnesiaApi.Repo.get!(Book, book_id)
+    with {:ok, %Section{} = section} <- Amnesia.create_section(section_params) do
+      case Amnesia.create_book_section(%{book_id: book.id, section_id: section.id }) do
+        {:ok, %BookSection{}} -> 
+          conn 
+          |> put_status(:created)
+          |> put_resp_header("location", section_path(conn, :show, section))
+          |> render("show.json", section: section)       
+      end            
+    end
   end
 
   def create(conn, %{"section" => section_params}) do
