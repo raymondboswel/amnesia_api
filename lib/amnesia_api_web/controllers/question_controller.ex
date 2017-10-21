@@ -23,8 +23,12 @@ defmodule AmnesiaApiWeb.QuestionController do
 
   def create(conn, %{"question" => question_params}) do
     {:ok, question} = Amnesia.create_question(question_params) 
-    {:ok, result} = Amnesia.create_section_questions(%{question_id: question.id, section_id: question_params["section_id"]})
-    question = question |> AmnesiaApi.Repo.preload(:answers)
+    if question_params["section_id"] != "" do
+      {:ok, result} = Amnesia.create_section_questions(%{question_id: question.id, section_id: question_params["section_id"]})
+    end
+    question = question 
+    |> AmnesiaApi.Repo.preload(:answers)
+    |> AmnesiaApi.Repo.preload(:sections)
     Logger.debug "Result #{inspect result}"
     with %Question{} = question <- question do
       conn

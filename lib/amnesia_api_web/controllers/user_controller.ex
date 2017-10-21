@@ -33,7 +33,7 @@ defmodule AmnesiaApiWeb.UserController do
   end
 
   def login(conn, %{"user" => %{"email" => email, "password" => password}}) do
-    user = AmnesiaApi.Repo.get_by(User, email: email)
+    user = AmnesiaApi.Repo.get_by(User, email: String.downcase(email))
     auth_success = Pbkdf2.verify_pass(password, user.password_hash)
     if auth_success do
       new_conn = Guardian.Plug.api_sign_in(conn, user)
