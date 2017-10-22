@@ -42,7 +42,8 @@ defmodule AmnesiaApiWeb.BookController do
       end)
     Logger.debug "existing_authors: #{inspect existing_authors}"
     case Amnesia.create_book(%{title: title, subtitle: subtitle}) do
-      {:ok, book} ->         
+      {:ok, book} ->  
+        book = AmnesiaApi.Repo.preload(book, :sections)       
         Logger.warn "Book: #{inspect book}"
         Logger.debug "Existing authors: #{inspect existing_authors}"
         res = Enum.each(existing_authors, fn(author) -> AmnesiaApi.Repo.insert(%BookAuthors{book_id: book.id, author_id: author.id}) end)
