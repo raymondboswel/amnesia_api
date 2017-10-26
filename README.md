@@ -1,3 +1,5 @@
+
+[![Travis Status](https://travis-ci.org/raymondboswel/amnesia_api.svg?branch=master)]
 # AmnesiaApi
 
 To start your Phoenix server:
