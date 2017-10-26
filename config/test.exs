@@ -11,9 +11,9 @@ config :logger, level: :warn
 
 # Configure your database
 config :amnesia_api, AmnesiaApi.Repo,
-  adapter: Ecto.Adapters.MySQL,
-  username: "travis",
-  password: "",
+  adapter: Ecto.Adapters.Postgres,
+  username: "postgres",
+  password: "letmein",
   database: "amnesia_api_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

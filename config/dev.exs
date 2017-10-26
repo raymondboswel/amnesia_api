@@ -50,9 +50,9 @@ config :phoenix, :stacktrace_depth, 20
 
 # Configure your database
 config :amnesia_api, AmnesiaApi.Repo,
-  adapter: Ecto.Adapters.MySQL,
-  username: "root",
-  password: "",
+  adapter: Ecto.Adapters.Postgres,
+  username: "postgres",
+  password: "letmein",
   database: "amnesia_api_dev",
   hostname: "localhost",
   pool_size: 10
