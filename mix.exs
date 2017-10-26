@@ -38,6 +38,7 @@ defmodule AmnesiaApi.Mixfile do
       {:phoenix, "~> 1.3.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
+      {:distillery, "~> 1.0.0"},
       {:mariaex, git: "https://github.com/xerions/mariaex", branch: "master", override: true},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
