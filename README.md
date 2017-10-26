@@ -1,5 +1,5 @@
 
-# AmnesiaApi [![Build Status](https://travis-ci.org/raymondboswel/amnesia_api.svg?branch=master)](https://travis-ci.org/raymondboswel/amnesia_api)
+# AmnesiaApi [![Build Status](https://travis-ci.org/raymondboswel/amnesia_api.svg?branch=master)](https://travis-ci.org/raymondboswel/amnesia_api) [![Coverage Status](https://coveralls.io/repos/github/raymondboswel/amnesia_api/badge.svg?branch=master)](https://coveralls.io/github/raymondboswel/amnesia_api?branch=master)
 
 To start your Phoenix server:
 
