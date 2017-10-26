@@ -18,5 +18,6 @@ defmodule AmnesiaApi.Amnesia.Question do
     question
     |> cast(attrs, [:text, :rating, :book_id])
     |> validate_required([:text])
+    |> foreign_key_constraint(:book_id)
   end
 end

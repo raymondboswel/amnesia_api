@@ -4,6 +4,7 @@ defmodule AmnesiaApiWeb.QuestionController do
   require Logger
   alias AmnesiaApi.Amnesia
   alias AmnesiaApi.Amnesia.Question
+  alias AmnesiaApi.Repo
 
   action_fallback AmnesiaApiWeb.FallbackController
 
@@ -22,15 +23,14 @@ defmodule AmnesiaApiWeb.QuestionController do
 
 
   def create(conn, %{"question" => question_params}) do
-    {:ok, question} = Amnesia.create_question(question_params) 
-    if question_params["section_id"] != "" do
-      {:ok, result} = Amnesia.create_section_questions(%{question_id: question.id, section_id: question_params["section_id"]})
-    end
-    question = question 
-    |> AmnesiaApi.Repo.preload(:answers)
-    |> AmnesiaApi.Repo.preload(:sections)
-    Logger.debug "Result #{inspect result}"
-    with %Question{} = question <- question do
+    with {:ok, question} <- Amnesia.create_question(question_params) do
+      if question_params["section_id"] != "" and question_params["section_id"] != nil do
+        {:ok, result} = Amnesia.create_section_questions(%{question_id: question.id, section_id: question_params["section_id"]})
+      end
+      question = question
+      |> AmnesiaApi.Repo.preload(:answers)
+      |> AmnesiaApi.Repo.preload(:sections)
+      Logger.debug "Result #{inspect result}"
       conn
       |> put_status(:created)
       |> put_resp_header("location", question_path(conn, :show, question))
@@ -40,6 +40,8 @@ defmodule AmnesiaApiWeb.QuestionController do
 
   def show(conn, %{"id" => id}) do
     question = Amnesia.get_question!(id)
+                |> Repo.preload(:sections)
+                |> Repo.preload(:answers)
     render(conn, "show.json", question: question)
   end
 
@@ -47,6 +49,9 @@ defmodule AmnesiaApiWeb.QuestionController do
     question = Amnesia.get_question!(id)
 
     with {:ok, %Question{} = question} <- Amnesia.update_question(question, question_params) do
+      question = question
+                  |> Repo.preload(:sections)
+                  |> Repo.preload(:answers)
       render(conn, "show.json", question: question)
     end
   end

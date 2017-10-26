@@ -4,13 +4,18 @@ defmodule AmnesiaApiWeb.QuestionControllerTest do
   alias AmnesiaApi.Amnesia
   alias AmnesiaApi.Amnesia.Question
 
-  @create_attrs %{question: "some question", rating: 120.5}
-  @update_attrs %{question: "some updated question", rating: 456.7}
-  @invalid_attrs %{question: nil, rating: nil}
+  @create_attrs %{text: "some question", rating: 120.5}
+  @update_attrs %{text: "some updated question", rating: 456.7}
+  @invalid_attrs %{text: nil, rating: ""}
 
   def fixture(:question) do
     {:ok, question} = Amnesia.create_question(@create_attrs)
     question
+  end
+
+  def fixture(:book) do
+    {:ok, book } = Amnesia.create_book(%{title: "test", subtitle: "test subtitle"})
+    book
   end
 
   setup %{conn: conn} do
@@ -26,14 +31,17 @@ defmodule AmnesiaApiWeb.QuestionControllerTest do
 
   describe "create question" do
     test "renders question when data is valid", %{conn: conn} do
-      conn = post conn, question_path(conn, :create), question: @create_attrs
+      book = fixture(:book)
+      conn = post conn, question_path(conn, :create), question: Map.put(@create_attrs, :book_id, book.id)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get conn, question_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "question" => "some question",
-        "rating" => 120.5}
+        "rating" => 120.5,
+        "answers" => [],
+        "section" => %{"id" => 0, "name" => "Uncategorized"},
+        "text" => "some question"}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -52,7 +60,9 @@ defmodule AmnesiaApiWeb.QuestionControllerTest do
       conn = get conn, question_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "question" => "some updated question",
+        "answers" => [],
+        "section" => %{"id" => 0, "name" => "Uncategorized"},
+        "text" => "some updated question",
         "rating" => 456.7}
     end
 
