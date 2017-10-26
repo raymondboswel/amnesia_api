@@ -311,64 +311,6 @@ defmodule AmnesiaApi.AmnesiaTest do
     end
   end
 
-  describe "chapter_questions" do
-    alias AmnesiaApi.Amnesia.ChapterQuestion
-
-    @valid_attrs %{}
-    @update_attrs %{}
-    @invalid_attrs %{}
-
-    def chapter_question_fixture(attrs \\ %{}) do
-      {:ok, chapter_question} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Amnesia.create_chapter_question()
-
-      chapter_question
-    end
-
-    test "list_chapter_questions/0 returns all chapter_questions" do
-      chapter_question = chapter_question_fixture()
-      assert Amnesia.list_chapter_questions() == [chapter_question]
-    end
-
-    test "get_chapter_question!/1 returns the chapter_question with given id" do
-      chapter_question = chapter_question_fixture()
-      assert Amnesia.get_chapter_question!(chapter_question.id) == chapter_question
-    end
-
-    test "create_chapter_question/1 with valid data creates a chapter_question" do
-      assert {:ok, %ChapterQuestion{} = chapter_question} = Amnesia.create_chapter_question(@valid_attrs)
-    end
-
-    test "create_chapter_question/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Amnesia.create_chapter_question(@invalid_attrs)
-    end
-
-    test "update_chapter_question/2 with valid data updates the chapter_question" do
-      chapter_question = chapter_question_fixture()
-      assert {:ok, chapter_question} = Amnesia.update_chapter_question(chapter_question, @update_attrs)
-      assert %ChapterQuestion{} = chapter_question
-    end
-
-    test "update_chapter_question/2 with invalid data returns error changeset" do
-      chapter_question = chapter_question_fixture()
-      assert {:error, %Ecto.Changeset{}} = Amnesia.update_chapter_question(chapter_question, @invalid_attrs)
-      assert chapter_question == Amnesia.get_chapter_question!(chapter_question.id)
-    end
-
-    test "delete_chapter_question/1 deletes the chapter_question" do
-      chapter_question = chapter_question_fixture()
-      assert {:ok, %ChapterQuestion{}} = Amnesia.delete_chapter_question(chapter_question)
-      assert_raise Ecto.NoResultsError, fn -> Amnesia.get_chapter_question!(chapter_question.id) end
-    end
-
-    test "change_chapter_question/1 returns a chapter_question changeset" do
-      chapter_question = chapter_question_fixture()
-      assert %Ecto.Changeset{} = Amnesia.change_chapter_question(chapter_question)
-    end
-  end
-
   describe "book_authors" do
     alias AmnesiaApi.Amnesia.BookAuthors
 
