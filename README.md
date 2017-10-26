@@ -1,5 +1,5 @@
 
-[![Travis Status](https://travis-ci.org/raymondboswel/amnesia_api.svg?branch=master)]
+[![Build Status](https://travis-ci.org/raymondboswel/amnesia_api.svg?branch=master)](https://travis-ci.org/raymondboswel/amnesia_api)
 # AmnesiaApi
 
 To start your Phoenix server:
