@@ -8,8 +8,9 @@ defmodule AmnesiaApiWeb.SectionQuestionsControllerTest do
   @update_attrs %{}
   @invalid_attrs %{invalid_key: "invalid_value"}
 
-  def fixture(:section_questions) do
-    {:ok, section_questions} = Amnesia.create_section_questions(@create_attrs)
+  def fixture(:section_questions, section, question) do
+    section_question = %AmnesiaApi.Amnesia.SectionQuestions{section_id: section.id, question_id: question.id}
+    {:ok, section_questions} = Amnesia.create_section_questions(section_question)
     section_questions
   end
 
