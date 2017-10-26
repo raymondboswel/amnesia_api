@@ -3,14 +3,25 @@ defmodule AmnesiaApiWeb.UserBookControllerTest do
 
   alias AmnesiaApi.Amnesia
   alias AmnesiaApi.Amnesia.UserBook
+  alias AmnesiaApi.Accounts
 
   @create_attrs %{}
   @update_attrs %{}
-  @invalid_attrs %{}
+  @invalid_attrs %{book_id: 543, user_id: 345}
 
-  def fixture(:user_book) do
-    {:ok, user_book} = Amnesia.create_user_book(@create_attrs)
+  def fixture(:user_book, user, book) do
+    {:ok, user_book} = Amnesia.create_user_book(%{user_id: user.id, book_id: book.id})
     user_book
+  end
+
+  def fixture(:book) do
+    {:ok, book } = Amnesia.create_book(%{title: "test", subtitle: "test subtitle"})
+    book
+  end
+
+  def fixture(:user) do
+    {:ok, user } = Accounts.create_user(%{name: "test user", surname: "test surname", email: "email", password_hash: "passwordhash"})
+    user
   end
 
   setup %{conn: conn} do
@@ -26,12 +37,13 @@ defmodule AmnesiaApiWeb.UserBookControllerTest do
 
   describe "create user_book" do
     test "renders user_book when data is valid", %{conn: conn} do
-      conn = post conn, user_book_path(conn, :create), user_book: @create_attrs
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      user = fixture(:user)
+      book = fixture(:book)
 
-      conn = get conn, user_book_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id}
+      conn = post conn, user_book_path(conn, :create), %{user_book: %{user_id: user.id, book_id: book.id}}
+      book_id = book.id
+      user_id = user.id
+      assert %{"book_id" => ^book_id, "user_id" => ^user_id} = json_response(conn, 201)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -44,12 +56,12 @@ defmodule AmnesiaApiWeb.UserBookControllerTest do
     setup [:create_user_book]
 
     test "renders user_book when data is valid", %{conn: conn, user_book: %UserBook{id: id} = user_book} do
+      book_id = user_book.book_id
       conn = put conn, user_book_path(conn, :update, user_book), user_book: @update_attrs
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      assert %{"book_id" => ^book_id} = json_response(conn, 200)["data"]
 
       conn = get conn, user_book_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id}
+      assert json_response(conn, 200)["data"] == %{"book_id" => user_book.book_id, "user_id" => user_book.user_id}
     end
 
     test "renders errors when data is invalid", %{conn: conn, user_book: user_book} do
@@ -62,7 +74,7 @@ defmodule AmnesiaApiWeb.UserBookControllerTest do
     setup [:create_user_book]
 
     test "deletes chosen user_book", %{conn: conn, user_book: user_book} do
-      conn = delete conn, user_book_path(conn, :delete, user_book)
+      conn = delete conn, "/api/user_books", %{user_id: user_book.user_id, book_id: user_book.book_id}
       assert response(conn, 204)
       assert_error_sent 404, fn ->
         get conn, user_book_path(conn, :show, user_book)
@@ -71,7 +83,9 @@ defmodule AmnesiaApiWeb.UserBookControllerTest do
   end
 
   defp create_user_book(_) do
-    user_book = fixture(:user_book)
+    user = fixture(:user)
+    book = fixture(:book)
+    user_book = fixture(:user_book, user, book)
     {:ok, user_book: user_book}
   end
 end

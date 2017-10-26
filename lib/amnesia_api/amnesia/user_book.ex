@@ -16,5 +16,7 @@ defmodule AmnesiaApi.Amnesia.UserBook do
     user_book
     |> cast(attrs, [:user_id, :book_id])
     |> validate_required([:user_id, :book_id])
+    |> foreign_key_constraint(:user_id)
+    |> foreign_key_constraint(:book_id)
   end
 end
