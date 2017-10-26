@@ -7,7 +7,7 @@ config :amnesia_api, AmnesiaApiWeb.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :debug
+config :logger, level: :info
 
 # Configure your database
 config :amnesia_api, AmnesiaApi.Repo,

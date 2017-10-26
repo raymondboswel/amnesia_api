@@ -545,64 +545,6 @@ defmodule AmnesiaApi.AmnesiaTest do
     end
   end
 
-  describe "section_questions" do
-    alias AmnesiaApi.Amnesia.SectionQuestions
-
-    @valid_attrs %{}
-    @update_attrs %{}
-    @invalid_attrs %{}
-
-    def section_questions_fixture(attrs \\ %{}) do
-      {:ok, section_questions} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Amnesia.create_section_questions()
-
-      section_questions
-    end
-
-    test "list_section_questions/0 returns all section_questions" do
-      section_questions = section_questions_fixture()
-      assert Amnesia.list_section_questions() == [section_questions]
-    end
-
-    test "get_section_questions!/1 returns the section_questions with given id" do
-      section_questions = section_questions_fixture()
-      assert Amnesia.get_section_questions!(section_questions.id) == section_questions
-    end
-
-    test "create_section_questions/1 with valid data creates a section_questions" do
-      assert {:ok, %SectionQuestions{} = section_questions} = Amnesia.create_section_questions(@valid_attrs)
-    end
-
-    test "create_section_questions/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Amnesia.create_section_questions(@invalid_attrs)
-    end
-
-    test "update_section_questions/2 with valid data updates the section_questions" do
-      section_questions = section_questions_fixture()
-      assert {:ok, section_questions} = Amnesia.update_section_questions(section_questions, @update_attrs)
-      assert %SectionQuestions{} = section_questions
-    end
-
-    test "update_section_questions/2 with invalid data returns error changeset" do
-      section_questions = section_questions_fixture()
-      assert {:error, %Ecto.Changeset{}} = Amnesia.update_section_questions(section_questions, @invalid_attrs)
-      assert section_questions == Amnesia.get_section_questions!(section_questions.id)
-    end
-
-    test "delete_section_questions/1 deletes the section_questions" do
-      section_questions = section_questions_fixture()
-      assert {:ok, %SectionQuestions{}} = Amnesia.delete_section_questions(section_questions)
-      assert_raise Ecto.NoResultsError, fn -> Amnesia.get_section_questions!(section_questions.id) end
-    end
-
-    test "change_section_questions/1 returns a section_questions changeset" do
-      section_questions = section_questions_fixture()
-      assert %Ecto.Changeset{} = Amnesia.change_section_questions(section_questions)
-    end
-  end
-
   describe "user_books" do
     alias AmnesiaApi.Amnesia.UserBook
 

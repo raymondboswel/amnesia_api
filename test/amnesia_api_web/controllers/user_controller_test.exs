@@ -4,9 +4,9 @@ defmodule AmnesiaApiWeb.UserControllerTest do
   alias AmnesiaApi.Accounts
   alias AmnesiaApi.Accounts.User
 
-  @create_attrs %{email: "some email", name: "some name", password_hash: "some password_hash", salt: "some salt", surname: "some surname"}
+  @create_attrs %{email: "some email", name: "some name", password: "password",  password_hash: "some password_hash", salt: "some salt", surname: "some surname"}
   @update_attrs %{email: "some updated email", name: "some updated name", password_hash: "some updated password_hash", salt: "some updated salt", surname: "some updated surname"}
-  @invalid_attrs %{email: nil, name: nil, password_hash: nil, salt: nil, surname: nil}
+  @invalid_attrs %{email: nil, name: nil, password_hash: nil, password: "123123123123" , surname: nil}
 
   def fixture(:user) do
     {:ok, user} = Accounts.create_user(@create_attrs)
@@ -27,15 +27,13 @@ defmodule AmnesiaApiWeb.UserControllerTest do
   describe "create user" do
     test "renders user when data is valid", %{conn: conn} do
       conn = post conn, user_path(conn, :create), user: @create_attrs
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      assert %{"user_id" => id} = json_response(conn, 201)
 
       conn = get conn, user_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "email" => "some email",
         "name" => "some name",
-        "password_hash" => "some password_hash",
-        "salt" => "some salt",
         "surname" => "some surname"}
     end
 
@@ -57,8 +55,6 @@ defmodule AmnesiaApiWeb.UserControllerTest do
         "id" => id,
         "email" => "some updated email",
         "name" => "some updated name",
-        "password_hash" => "some updated password_hash",
-        "salt" => "some updated salt",
         "surname" => "some updated surname"}
     end
 

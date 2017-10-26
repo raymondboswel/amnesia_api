@@ -13,11 +13,8 @@ defmodule AmnesiaApiWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
-
     passwd_hash = Pbkdf2.hash_pwd_salt(user_params["password"])
-
     user = Map.put(user_params, "password_hash", passwd_hash)
-
     create_user_result = Accounts.create_user(user)
     Logger.debug "create user result: #{inspect create_user_result}"
     with {:ok, %User{} = user} <- create_user_result do
@@ -26,9 +23,10 @@ defmodule AmnesiaApiWeb.UserController do
         {:ok, claims} = Guardian.Plug.claims(new_conn)
         exp = Map.get(claims, "exp")
         conn
-           |>  put_resp_header("authorization", "Bearer #{jwt}")
-           |>  put_resp_header("x-expires", Integer.to_string(exp))
-           |>  render "sign_in.json", user: user, jwt: jwt, exp: exp
+          |> put_status(:created)
+          |>  put_resp_header("authorization", "Bearer #{jwt}")
+          |>  put_resp_header("x-expires", Integer.to_string(exp))
+          |>  render "sign_in.json", user: user, jwt: jwt, exp: exp
     end
   end
 
@@ -42,6 +40,7 @@ defmodule AmnesiaApiWeb.UserController do
       exp = Map.get(claims, "exp")
 
       new_conn
+      |> put_status(:ok)
       |> put_resp_header("authorization", "Bearer #{jwt}")
       |> put_resp_header("x-expires", Integer.to_string(exp))
       |> render("sign_in.json", user: user, jwt: jwt, exp: exp)
