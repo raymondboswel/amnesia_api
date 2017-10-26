@@ -12,7 +12,7 @@ config :logger, level: :debug
 # Configure your database
 config :amnesia_api, AmnesiaApi.Repo,
   adapter: Ecto.Adapters.MySQL,
-  username: "root",
+  username: "travis",
   password: "",
   database: "amnesia_api_test",
   hostname: "localhost",
