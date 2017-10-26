@@ -15,6 +15,6 @@ defmodule AmnesiaApi.Amnesia.BookAuthors do
   def changeset(%BookAuthors{} = book_authors, attrs) do
     book_authors
     |> cast(attrs, [:book_id, :author_id])
-    |> validate_required([])
+    |> validate_required([:book_id, :author_id])
   end
 end
