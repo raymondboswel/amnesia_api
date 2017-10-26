@@ -774,6 +774,79 @@ defmodule AmnesiaApi.Amnesia do
     BookSection.changeset(book_section, %{})
   end
 
+  alias AmnesiaApi.Amnesia.SectionQuestions
+
+    @doc """
+    Returns the list of section_questions.
+    ## Examples
+        iex> list_section_questions()
+        [%SectionQuestions{}, ...]
+    """
+    def list_section_questions do
+      Repo.all(SectionQuestions)
+    end
+
+    @doc """
+    Gets a single section_questions.
+    Raises `Ecto.NoResultsError` if the Section questions does not exist.
+    ## Examples
+        iex> get_section_questions!(123)
+        %SectionQuestions{}
+        iex> get_section_questions!(456)
+        ** (Ecto.NoResultsError)
+    """
+    def get_section_questions!(id), do: Repo.get!(SectionQuestions, id)
+
+    @doc """
+    Creates a section_questions.
+    ## Examples
+        iex> create_section_questions(%{field: value})
+        {:ok, %SectionQuestions{}}
+        iex> create_section_questions(%{field: bad_value})
+        {:error, %Ecto.Changeset{}}
+    """
+    def create_section_questions(attrs \\ %{}) do
+      %SectionQuestions{}
+      |> SectionQuestions.changeset(attrs)
+      |> Repo.insert()
+    end
+
+    @doc """
+    Updates a section_questions.
+    ## Examples
+        iex> update_section_questions(section_questions, %{field: new_value})
+        {:ok, %SectionQuestions{}}
+        iex> update_section_questions(section_questions, %{field: bad_value})
+        {:error, %Ecto.Changeset{}}
+    """
+    def update_section_questions(%SectionQuestions{} = section_questions, attrs) do
+      section_questions
+      |> SectionQuestions.changeset(attrs)
+      |> Repo.update()
+    end
+
+    @doc """
+    Deletes a SectionQuestions.
+    ## Examples
+        iex> delete_section_questions(section_questions)
+        {:ok, %SectionQuestions{}}
+        iex> delete_section_questions(section_questions)
+        {:error, %Ecto.Changeset{}}
+    """
+    def delete_section_questions(%SectionQuestions{} = section_questions) do
+      Repo.delete(section_questions)
+    end
+
+    @doc """
+    Returns an `%Ecto.Changeset{}` for tracking section_questions changes.
+    ## Examples
+        iex> change_section_questions(section_questions)
+        %Ecto.Changeset{source: %SectionQuestions{}}
+    """
+    def change_section_questions(%SectionQuestions{} = section_questions) do
+      SectionQuestions.changeset(section_questions, %{})
+    end
+
   alias AmnesiaApi.Amnesia.UserBook
 
   @doc """
