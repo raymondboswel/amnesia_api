@@ -10,6 +10,8 @@ defmodule AmnesiaApi.Mixfile do
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
       deps: deps()
     ]
   end
@@ -41,6 +43,7 @@ defmodule AmnesiaApi.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
+      {:excoveralls, "~> 0.7", only: :test},
       {:cors_plug, "~> 1.2"},
       {:guardian, "~> 0.14"},
       {:comeonin, "~> 4.0"},

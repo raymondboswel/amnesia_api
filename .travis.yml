@@ -4,5 +4,8 @@ otp_release: '19.0'
 addons:
   mariadb: '10.0'
 services: mariadb
+env:
+  - MIX_ENV=test
+script: mix coveralls.travis
 before_install:
   - mysql -e 'CREATE DATABASE amnesia_api_test;'
