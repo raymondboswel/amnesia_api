@@ -3,7 +3,7 @@ defmodule AmnesiaApi.Amnesia.Book do
   import Ecto.Changeset
   alias AmnesiaApi.Amnesia.Book
 
-
+  @timestamps_opts [usec: false]
   schema "books" do
     field :subtitle, :string
     field :title, :string

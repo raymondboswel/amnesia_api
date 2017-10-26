@@ -3,7 +3,7 @@ defmodule AmnesiaApi.Amnesia.Answer do
   import Ecto.Changeset
   alias AmnesiaApi.Amnesia.Answer
 
-
+  @timestamps_opts [usec: false]
   schema "answers" do
     field :answer, :string
     field :rating, :float

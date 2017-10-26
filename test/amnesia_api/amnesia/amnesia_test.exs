@@ -130,9 +130,9 @@ defmodule AmnesiaApi.AmnesiaTest do
   describe "questions" do
     alias AmnesiaApi.Amnesia.Question
 
-    @valid_attrs %{question: "some question", rating: 120.5}
-    @update_attrs %{question: "some updated question", rating: 456.7}
-    @invalid_attrs %{question: nil, rating: nil}
+    @valid_attrs %{text: "some question", rating: 120.5}
+    @update_attrs %{text: "some updated question", rating: 456.7}
+    @invalid_attrs %{text: nil, rating: nil}
 
     def question_fixture(attrs \\ %{}) do
       {:ok, question} =
@@ -145,7 +145,7 @@ defmodule AmnesiaApi.AmnesiaTest do
 
     test "list_questions/0 returns all questions" do
       question = question_fixture()
-      assert Amnesia.list_questions() == [question]
+      assert List.first(Amnesia.list_questions()).text == question.text
     end
 
     test "get_question!/1 returns the question with given id" do
@@ -155,7 +155,7 @@ defmodule AmnesiaApi.AmnesiaTest do
 
     test "create_question/1 with valid data creates a question" do
       assert {:ok, %Question{} = question} = Amnesia.create_question(@valid_attrs)
-      assert question.question == "some question"
+      assert question.text == "some question"
       assert question.rating == 120.5
     end
 
@@ -167,7 +167,7 @@ defmodule AmnesiaApi.AmnesiaTest do
       question = question_fixture()
       assert {:ok, question} = Amnesia.update_question(question, @update_attrs)
       assert %Question{} = question
-      assert question.question == "some updated question"
+      assert question.text == "some updated question"
       assert question.rating == 456.7
     end
 
@@ -316,9 +316,12 @@ defmodule AmnesiaApi.AmnesiaTest do
 
     @valid_attrs %{}
     @update_attrs %{}
-    @invalid_attrs %{}
+    @invalid_attrs %{book_id: 0, author_id: 0}
 
     def book_authors_fixture(attrs \\ %{}) do
+      book = book_fixture()
+      author = author_fixture()
+      attrs = %{book_id: book.id, author_id: author.id}
       {:ok, book_authors} =
         attrs
         |> Enum.into(@valid_attrs)
@@ -329,7 +332,7 @@ defmodule AmnesiaApi.AmnesiaTest do
 
     test "list_book_authors/0 returns all book_authors" do
       book_authors = book_authors_fixture()
-      assert Amnesia.list_book_authors() == [book_authors]
+      assert List.first(Amnesia.list_book_authors()).author_id == book_authors.author_id
     end
 
     test "get_book_authors!/1 returns the book_authors with given id" do
@@ -338,7 +341,9 @@ defmodule AmnesiaApi.AmnesiaTest do
     end
 
     test "create_book_authors/1 with valid data creates a book_authors" do
-      assert {:ok, %BookAuthors{} = book_authors} = Amnesia.create_book_authors(@valid_attrs)
+      book = book_fixture()
+      author = author_fixture()
+      assert {:ok, %BookAuthors{} = book_authors} = Amnesia.create_book_authors(%{book_id: book.id, author_id: author.id})
     end
 
     test "create_book_authors/1 with invalid data returns error changeset" do
@@ -414,7 +419,7 @@ defmodule AmnesiaApi.AmnesiaTest do
     test "update_section/2 with invalid data returns error changeset" do
       section = section_fixture()
       assert {:error, %Ecto.Changeset{}} = Amnesia.update_section(section, @invalid_attrs)
-      assert section == Amnesia.get_section!(section.id)
+      assert section.name == Amnesia.get_section!(section.id).name
     end
 
     test "delete_section/1 deletes the section" do
@@ -434,9 +439,12 @@ defmodule AmnesiaApi.AmnesiaTest do
 
     @valid_attrs %{}
     @update_attrs %{}
-    @invalid_attrs %{}
+    @invalid_attrs %{book_id: 0, section_id: 0}
 
     def book_section_fixture(attrs \\ %{}) do
+      book = book_fixture()
+      section = section_fixture()
+      attrs = %{book_id: book.id, section_id: section.id}
       {:ok, book_section} =
         attrs
         |> Enum.into(@valid_attrs)
@@ -456,7 +464,9 @@ defmodule AmnesiaApi.AmnesiaTest do
     end
 
     test "create_book_section/1 with valid data creates a book_section" do
-      assert {:ok, %BookSection{} = book_section} = Amnesia.create_book_section(@valid_attrs)
+      book = book_fixture()
+      section = section_fixture()
+      assert {:ok, %BookSection{} = book_section} = Amnesia.create_book_section(%{book_id: book.id, section_id: section.id})
     end
 
     test "create_book_section/1 with invalid data returns error changeset" do
@@ -492,9 +502,17 @@ defmodule AmnesiaApi.AmnesiaTest do
 
     @valid_attrs %{}
     @update_attrs %{}
-    @invalid_attrs %{}
+    @invalid_attrs %{book_id: 0}
+
+    def user_fixture() do
+      {:ok, user} = AmnesiaApi.Accounts.create_user(%{name: "test name", surname: "test surname", email: "email", password_hash: "password_hash"})
+      user
+    end
 
     def user_book_fixture(attrs \\ %{}) do
+      user = user_fixture()
+      book = book_fixture()
+      attrs = %{user_id: user.id, book_id: book.id}
       {:ok, user_book} =
         attrs
         |> Enum.into(@valid_attrs)
@@ -505,7 +523,7 @@ defmodule AmnesiaApi.AmnesiaTest do
 
     test "list_user_books/0 returns all user_books" do
       user_book = user_book_fixture()
-      assert Amnesia.list_user_books() == [user_book]
+      assert List.first(Amnesia.list_user_books()).book_id == user_book.book_id
     end
 
     test "get_user_book!/1 returns the user_book with given id" do
@@ -514,7 +532,9 @@ defmodule AmnesiaApi.AmnesiaTest do
     end
 
     test "create_user_book/1 with valid data creates a user_book" do
-      assert {:ok, %UserBook{} = user_book} = Amnesia.create_user_book(@valid_attrs)
+      book = book_fixture()
+      user = user_fixture()
+      assert {:ok, %UserBook{} = user_book} = Amnesia.create_user_book(%{book_id: book.id, user_id: user.id})
     end
 
     test "create_user_book/1 with invalid data returns error changeset" do
@@ -530,7 +550,7 @@ defmodule AmnesiaApi.AmnesiaTest do
     test "update_user_book/2 with invalid data returns error changeset" do
       user_book = user_book_fixture()
       assert {:error, %Ecto.Changeset{}} = Amnesia.update_user_book(user_book, @invalid_attrs)
-      assert user_book == Amnesia.get_user_book!(user_book.id)
+      assert user_book.book_id == Amnesia.get_user_book!(user_book.id).book_id
     end
 
     test "delete_user_book/1 deletes the user_book" do

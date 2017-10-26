@@ -3,7 +3,7 @@ defmodule AmnesiaApi.Amnesia.Author do
   import Ecto.Changeset
   alias AmnesiaApi.Amnesia.Author
 
-
+  @timestamps_opts [usec: false]
   schema "authors" do
     field :name, :string
     field :surname, :string

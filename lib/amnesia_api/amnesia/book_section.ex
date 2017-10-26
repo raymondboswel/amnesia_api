@@ -3,7 +3,7 @@ defmodule AmnesiaApi.Amnesia.BookSection do
   import Ecto.Changeset
   alias AmnesiaApi.Amnesia.BookSection
 
-
+  @timestamps_opts [usec: false]
   schema "book_sections" do
     field :book_id, :id
     field :section_id, :id
