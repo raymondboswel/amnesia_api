@@ -16,5 +16,7 @@ defmodule AmnesiaApi.Amnesia.BookAuthors do
     book_authors
     |> cast(attrs, [:book_id, :author_id])
     |> validate_required([:book_id, :author_id])
+    |> foreign_key_constraint(:book_id)
+    |> foreign_key_constraint(:author_id)
   end
 end
