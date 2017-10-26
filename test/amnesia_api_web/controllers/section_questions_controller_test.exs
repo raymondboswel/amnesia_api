@@ -9,7 +9,7 @@ defmodule AmnesiaApiWeb.SectionQuestionsControllerTest do
   @invalid_attrs %{invalid_key: "invalid_value"}
 
   def fixture(:section_questions, section, question) do
-    section_question = %AmnesiaApi.Amnesia.SectionQuestions{section_id: section.id, question_id: question.id}
+    section_question = %{section_id: section.id, question_id: question.id}
     {:ok, section_questions} = Amnesia.create_section_questions(section_question)
     section_questions
   end
@@ -20,7 +20,7 @@ defmodule AmnesiaApiWeb.SectionQuestionsControllerTest do
   end
 
   def fixture(:question) do
-    {:ok, question} = Amnesia.create_section(%{question: "test question", rating: 0})
+    {:ok, question} = Amnesia.create_question(%{text: "test question", rating: 0})
     question
   end
 
@@ -37,7 +37,9 @@ defmodule AmnesiaApiWeb.SectionQuestionsControllerTest do
 
   describe "create section_questions" do
     test "renders section_questions when data is valid", %{conn: conn} do
-      conn = post conn, section_questions_path(conn, :create), section_questions: @create_attrs
+      section = fixture(:section)
+      question = fixture(:question)
+      conn = post conn, section_questions_path(conn, :create), %{section_questions: %{section_id: section.id, question_id: question.id}}
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get conn, section_questions_path(conn, :show, id)
@@ -47,24 +49,6 @@ defmodule AmnesiaApiWeb.SectionQuestionsControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post conn, section_questions_path(conn, :create), section_questions: @invalid_attrs
-      assert json_response(conn, 422)["errors"] != %{}
-    end
-  end
-
-  describe "update section_questions" do
-    setup [:create_section_questions]
-
-    test "renders section_questions when data is valid", %{conn: conn, section_questions: %SectionQuestions{id: id} = section_questions} do
-      conn = put conn, section_questions_path(conn, :update, section_questions), section_questions: @update_attrs
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
-
-      conn = get conn, section_questions_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id}
-    end
-
-    test "renders errors when data is invalid", %{conn: conn, section_questions: section_questions} do
-      conn = put conn, section_questions_path(conn, :update, section_questions), section_questions: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
