@@ -13,6 +13,14 @@ defmodule AmnesiaApiWeb.AnswerControllerTest do
     answer
   end
 
+  def fixture(:question) do
+    {:ok, question} = Amnesia.create_question(%{text: "test question"})
+  end
+
+  def fixture(:book) do
+    {:ok, book} = Amnesia.create_book(%{title: "Test book", subtitle: "subtitle", summary: "", })
+  end
+
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
@@ -26,7 +34,8 @@ defmodule AmnesiaApiWeb.AnswerControllerTest do
 
   describe "create answer" do
     test "renders answer when data is valid", %{conn: conn} do
-      conn = post conn, answer_path(conn, :create), answer: @create_attrs
+      {:ok, question} = fixture(:question)
+      conn = post conn, answer_path(conn, :create), %{answer: @create_attrs, question_id: question.id}
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get conn, answer_path(conn, :show, id)
@@ -37,7 +46,7 @@ defmodule AmnesiaApiWeb.AnswerControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, answer_path(conn, :create), answer: @invalid_attrs
+      conn = post conn, answer_path(conn, :create), %{answer: @invalid_attrs, question_id: 12}
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -77,5 +86,10 @@ defmodule AmnesiaApiWeb.AnswerControllerTest do
   defp create_answer(_) do
     answer = fixture(:answer)
     {:ok, answer: answer}
+  end
+
+  defp create_question(_) do
+    question = fixture(:question)
+    {:ok, question: question}
   end
 end

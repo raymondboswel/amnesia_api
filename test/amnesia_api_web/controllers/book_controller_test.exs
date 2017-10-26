@@ -33,7 +33,9 @@ defmodule AmnesiaApiWeb.BookControllerTest do
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "subtitle" => "some subtitle",
-        "title" => "some title"}
+        "title" => "some title",
+        "sections" => [],
+        "summary" => nil}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -53,7 +55,9 @@ defmodule AmnesiaApiWeb.BookControllerTest do
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "subtitle" => "some updated subtitle",
-        "title" => "some updated title"}
+        "title" => "some updated title",
+        "sections" => [],
+        "summary" => nil}
     end
 
     test "renders errors when data is invalid", %{conn: conn, book: book} do
