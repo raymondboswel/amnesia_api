@@ -16,5 +16,7 @@ defmodule AmnesiaApi.Amnesia.BookSection do
     book_section
     |> cast(attrs, [:book_id, :section_id])
     |> validate_required([:book_id, :section_id])
+    |> foreign_key_constraint(:book_id)
+    |> foreign_key_constraint(:section_id)
   end
 end

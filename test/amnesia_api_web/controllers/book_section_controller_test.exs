@@ -8,9 +8,19 @@ defmodule AmnesiaApiWeb.BookSectionControllerTest do
   @update_attrs %{}
   @invalid_attrs %{}
 
-  def fixture(:book_section) do
-    {:ok, book_section} = Amnesia.create_book_section(@create_attrs)
+  def fixture(:book_section, book, section) do
+    {:ok, book_section} = Amnesia.create_book_section(%{book_id: book.id, section_id: section.id})
     book_section
+  end
+
+  def fixture(:book) do
+    {:ok, book } = Amnesia.create_book(%{title: "test", subtitle: "test subtitle"})
+    book
+  end
+
+  def fixture(:section) do
+    {:ok, section } = Amnesia.create_section(%{name: "test section"})
+    section
   end
 
   setup %{conn: conn} do
@@ -26,7 +36,9 @@ defmodule AmnesiaApiWeb.BookSectionControllerTest do
 
   describe "create book_section" do
     test "renders book_section when data is valid", %{conn: conn} do
-      conn = post conn, book_section_path(conn, :create), book_section: @create_attrs
+      book = fixture(:book)
+      section = fixture(:section)
+      conn = post conn, book_section_path(conn, :create), book_section: %{book_id: book.id, section_id: section.id}
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get conn, book_section_path(conn, :show, id)
@@ -53,7 +65,7 @@ defmodule AmnesiaApiWeb.BookSectionControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, book_section: book_section} do
-      conn = put conn, book_section_path(conn, :update, book_section), book_section: @invalid_attrs
+      conn = put conn, book_section_path(conn, :update, book_section), book_section: %{book_id: 3232}
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -71,7 +83,9 @@ defmodule AmnesiaApiWeb.BookSectionControllerTest do
   end
 
   defp create_book_section(_) do
-    book_section = fixture(:book_section)
+    book = fixture(:book)
+    section = fixture(:section)
+    book_section = fixture(:book_section, book, section)
     {:ok, book_section: book_section}
   end
 end
