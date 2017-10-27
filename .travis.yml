@@ -2,10 +2,13 @@ language: elixir
 elixir: '1.5.2'
 otp_release: '19.0'
 addons:
-  mariadb: '10.0'
-services: mariadb
+  postgresql: '9.5'
+services:
+  - postgresql
 env:
   - MIX_ENV=test
+before_script:
+  - cp config/travis.exs config/test.exs
+  - mix do ecto.create, ecto.migrate
 script: mix coveralls.travis
-before_install:
-  - mysql -e 'CREATE DATABASE amnesia_api_test;'
+
