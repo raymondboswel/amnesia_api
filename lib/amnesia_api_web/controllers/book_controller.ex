@@ -19,6 +19,14 @@ defmodule AmnesiaApiWeb.BookController do
     render(conn, "index.json", books: books)
   end
 
+  def index(conn, %{"user_id" => user_id}) do
+    books = AmnesiaApi.Repo.all(from b in AmnesiaApi.Amnesia.Book, where: b.user_id == ^user_id)
+    |> Repo.preload(:authors)
+    |> Repo.preload(:sections)
+    Logger.debug "Books: #{inspect books}"
+    render(conn, "index.json", books: books)
+  end
+
   def index(conn, _params) do
     books = AmnesiaApi.Repo.all(from b in AmnesiaApi.Amnesia.Book)
     |> Repo.preload(:authors)
@@ -28,35 +36,35 @@ defmodule AmnesiaApiWeb.BookController do
   end
 
   # Need to add or link authors if provided
-  def create(conn, %{"book" => %{"authors" => authors, "title" => title, "subtitle" => subtitle}} ) do
-    new_authors = Enum.filter(authors, fn(author) -> !Map.has_key?(author, "id") end)
-    existing_authors = Enum.filter(authors, fn(author) -> Map.has_key?(author, "id") end)
-    Enum.each(new_authors, fn(a) ->
-        case AmnesiaApi.Repo.insert(AmnesiaApi.Amnesia.Author.changeset(%Author{}, a)) do
-          {:ok, author } ->
-            Logger.info "author: #{inspect author}"
-            existing_authors = [author | existing_authors]
-            Logger.debug "existing_authors: #{inspect existing_authors}"
-          {:error, changeset} -> Logger.error "Could not add author: #{inspect changeset}"
-        end
-      end)
-    Logger.debug "existing_authors: #{inspect existing_authors}"
-    case Amnesia.create_book(%{title: title, subtitle: subtitle}) do
-      {:ok, book} ->
-        book = AmnesiaApi.Repo.preload(book, :sections)
-        Logger.warn "Book: #{inspect book}"
-        Logger.debug "Existing authors: #{inspect existing_authors}"
-        res = Enum.each(existing_authors, fn(author) -> AmnesiaApi.Repo.insert(%BookAuthors{book_id: book.id, author_id: author.id}) end)
-        Logger.info "Add book author result: #{inspect res}"
-        conn
-          |> put_status(:created)
-          |> put_resp_header("location", book_path(conn, :show, book))
-          |> render("show.json", book: book)
+  # def create(conn, %{"book" => %{"authors" => authors, "title" => title, "subtitle" => subtitle}} ) do
+  #   new_authors = Enum.filter(authors, fn(author) -> !Map.has_key?(author, "id") end)
+  #   existing_authors = Enum.filter(authors, fn(author) -> Map.has_key?(author, "id") end)
+  #   Enum.each(new_authors, fn(a) ->
+  #       case AmnesiaApi.Repo.insert(AmnesiaApi.Amnesia.Author.changeset(%Author{}, a)) do
+  #         {:ok, author } ->
+  #           Logger.info "author: #{inspect author}"
+  #           existing_authors = [author | existing_authors]
+  #           Logger.debug "existing_authors: #{inspect existing_authors}"
+  #         {:error, changeset} -> Logger.error "Could not add author: #{inspect changeset}"
+  #       end
+  #     end)
+  #   Logger.debug "existing_authors: #{inspect existing_authors}"
+  #   case Amnesia.create_book(%{title: title, subtitle: subtitle}) do
+  #     {:ok, book} ->
+  #       book = AmnesiaApi.Repo.preload(book, :sections)
+  #       Logger.warn "Book: #{inspect book}"
+  #       Logger.debug "Existing authors: #{inspect existing_authors}"
+  #       res = Enum.each(existing_authors, fn(author) -> AmnesiaApi.Repo.insert(%BookAuthors{book_id: book.id, author_id: author.id}) end)
+  #       Logger.info "Add book author result: #{inspect res}"
+  #       conn
+  #         |> put_status(:created)
+  #         |> put_resp_header("location", book_path(conn, :show, book))
+  #         |> render("show.json", book: book)
 
-      {:error, changeset} ->  Logger.error "Could not add book: #{inspect changeset}"
-    end
+  #     {:error, changeset} ->  Logger.error "Could not add book: #{inspect changeset}"
+  #   end
 
-  end
+  # end
 
   def create(conn, %{"book" => book_params}) do
     with {:ok, %Book{} = book} <- Amnesia.create_book(book_params) do

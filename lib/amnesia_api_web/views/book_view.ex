@@ -15,6 +15,8 @@ defmodule AmnesiaApiWeb.BookView do
       title: book.title,
       subtitle: book.subtitle,
       summary: book.summary,
+      google_id: book.google_id,
+      cover_url: book.cover_url,
       sections: AmnesiaApiWeb.SectionView.render("index.json", %{sections: book.sections})
     }
   end
