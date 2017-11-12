@@ -4,7 +4,7 @@ defmodule AmnesiaApiWeb.BookControllerTest do
   alias AmnesiaApi.Amnesia
   alias AmnesiaApi.Amnesia.Book
 
-  @create_attrs %{subtitle: "some subtitle", title: "some title"}
+  @create_attrs %{subtitle: "some subtitle", title: "some title", google_id: "1234", cover_url: "http://fake_url"}
   @update_attrs %{subtitle: "some updated subtitle", title: "some updated title"}
   @invalid_attrs %{subtitle: nil, title: nil}
 
@@ -35,6 +35,8 @@ defmodule AmnesiaApiWeb.BookControllerTest do
         "subtitle" => "some subtitle",
         "title" => "some title",
         "sections" => [],
+        "cover_url" => "http://fake_url",
+        "google_id" => "1234",
         "summary" => nil}
     end
 
@@ -57,6 +59,8 @@ defmodule AmnesiaApiWeb.BookControllerTest do
         "subtitle" => "some updated subtitle",
         "title" => "some updated title",
         "sections" => [],
+        "cover_url" => "http://fake_url",
+        "google_id" => "1234",
         "summary" => nil}
     end
 

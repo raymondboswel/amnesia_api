@@ -15,7 +15,7 @@ defmodule AmnesiaApiWeb.UserBookControllerTest do
   end
 
   def fixture(:book) do
-    {:ok, book } = Amnesia.create_book(%{title: "test", subtitle: "test subtitle"})
+    {:ok, book } = Amnesia.create_book(%{title: "test", subtitle: "test subtitle", google_id: "1234", cover_url: "http://fake_url"})
     book
   end
 

@@ -6,7 +6,7 @@ defmodule AmnesiaApi.AmnesiaTest do
   describe "books" do
     alias AmnesiaApi.Amnesia.Book
 
-    @valid_attrs %{subtitle: "some subtitle", title: "some title"}
+    @valid_attrs %{subtitle: "some subtitle", title: "some title" , google_id: "1234", cover_url: "http://fake_url"}
     @update_attrs %{subtitle: "some updated subtitle", title: "some updated title"}
     @invalid_attrs %{subtitle: nil, title: nil}
 
