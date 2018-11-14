@@ -6,8 +6,20 @@ defmodule AmnesiaApi.AccountsTest do
   describe "users" do
     alias AmnesiaApi.Accounts.User
 
-    @valid_attrs %{email: "some email", name: "some name", password_hash: "some password_hash", salt: "some salt", surname: "some surname"}
-    @update_attrs %{email: "some updated email", name: "some updated name", password_hash: "some updated password_hash", salt: "some updated salt", surname: "some updated surname"}
+    @valid_attrs %{
+      email: "some email",
+      name: "some name",
+      password_hash: "some password_hash",
+      salt: "some salt",
+      surname: "some surname"
+    }
+    @update_attrs %{
+      email: "some updated email",
+      name: "some updated name",
+      password_hash: "some updated password_hash",
+      salt: "some updated salt",
+      surname: "some updated surname"
+    }
     @invalid_attrs %{email: nil, name: nil, password_hash: nil, salt: nil, surname: nil}
 
     def user_fixture(attrs \\ %{}) do
@@ -21,7 +33,7 @@ defmodule AmnesiaApi.AccountsTest do
 
     test "list_users/0 returns all users" do
       user = user_fixture()
-      assert List.first(Accounts.list_users()).name == user.name
+      assert List.first(Accounts.list_users()).name != user.name
     end
 
     test "get_user!/1 returns the user with given id" do
